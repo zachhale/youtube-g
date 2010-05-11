@@ -170,15 +170,23 @@ class YouTubeG
       #
       # === Returns
       #   String: The HTML for embedding the video on your website.
-      def embed_html(width = 425, height = 350)
-        <<EDOC
+      def embed_html(width = 425, height = 350, options={})
+        html = <<-EDOC
 <object width="#{width}" height="#{height}">
+EDOC
+        unless options[:fullscreen] == false
+          html << <<-EDOC
+  <param name="allowFullScreen" value="true"></param>
+EDOC
+        end
+        html << <<-EDOC
   <param name="movie" value="#{embed_url}"></param>
   <param name="wmode" value="transparent"></param>
   <embed src="#{embed_url}" type="application/x-shockwave-flash" 
-   wmode="transparent" width="#{width}" height="#{height}"></embed>
+   wmode="transparent" width="#{width}" height="#{height}"#{%( allowfullscreen="true") unless options[:fullscreen] == false}></embed>
 </object>
 EDOC
+        html
       end
 
       # The URL needed for embedding the video in a page.
